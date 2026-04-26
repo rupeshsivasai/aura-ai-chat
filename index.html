@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraAI — Intelligent Assistant</title>
+
+  <!-- ── Fonts ── -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ── Libraries ── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+  <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- ── Our Styles ── -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══════════════════════════════════
+       HEADER — Logo + Provider Tabs + Status
+       ══════════════════════════════════ -->
+  <header>
+    <div class="logo">
+      <div class="logo-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <circle cx="9"  cy="9"  r="3"   fill="#00c9a7"/>
+          <circle cx="9"  cy="3"  r="1.5" fill="#00c9a7" opacity="0.5"/>
+          <circle cx="9"  cy="15" r="1.5" fill="#00c9a7" opacity="0.5"/>
+          <circle cx="3"  cy="9"  r="1.5" fill="#00c9a7" opacity="0.5"/>
+          <circle cx="15" cy="9"  r="1.5" fill="#00c9a7" opacity="0.5"/>
+        </svg>
+      </div>
+      <span class="logo-text">Aura<span>AI</span></span>
+    </div>
+
+    <div class="header-right">
+      <!-- Switch between OpenAI and Ollama -->
+      <div class="provider-tabs">
+        <button class="tab-btn active-openai" id="tab-openai" onclick="switchProvider('openai')">⚡ OpenAI</button>
+        <button class="tab-btn"              id="tab-ollama"  onclick="switchProvider('ollama')">🦙 Ollama</button>
+      </div>
+
+      <!-- Status dot + text + change key button -->
+      <div class="header-status">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">ready</span>
+        <button
+          id="change-key-btn"
+          onclick="resetKey()"
+          title="Change API Key"
+          style="display:none; background:none; border:1px solid var(--border-bright); border-radius:6px;
+                 color:var(--text-faint); font-family:var(--font-mono); font-size:11px;
+                 padding:3px 8px; cursor:pointer; transition:all 0.2s; margin-left:4px;">
+          change key
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════
+       OPENAI BANNER — Enter API Key
+       ══════════════════════════════════ -->
+  <div class="banner" id="openai-banner">
+    <div class="banner-icon openai">🔑</div>
+    <div style="flex:1;">
+      <div class="banner-label">OpenAI API Key</div>
+      <div class="banner-input-row">
+        <input type="password" class="banner-input" id="api-key-input"
+               placeholder="sk-..." autocomplete="off"/>
+        <button class="banner-btn openai" id="save-key-btn">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       OLLAMA BANNER — Enter Host + Model
+       ══════════════════════════════════ -->
+  <div class="banner hidden" id="ollama-banner">
+    <div class="banner-icon ollama">🦙</div>
+    <div style="flex:1;">
+      <div class="banner-label">Ollama — Local AI</div>
+      <div class="banner-input-row">
+        <input type="text" class="banner-input" id="ollama-host-input"
+               placeholder="http://localhost:11434" style="max-width:200px;"/>
+        <input type="text" class="banner-input" id="ollama-model-input"
+               placeholder="Model: llama3, mistral..."/>
+        <button class="banner-btn ollama" id="save-ollama-btn">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       OLLAMA INFO BAR — Quick-start tip
+       ══════════════════════════════════ -->
+  <div class="ollama-info hidden" id="ollama-info">
+    <span style="font-size:16px; flex-shrink:0;">💡</span>
+    <span>
+      No API key needed! Install <a href="https://ollama.com" target="_blank">Ollama</a>,
+      then run <span class="info-code">ollama serve</span> and pull a model with
+      <span class="info-code">ollama pull llama3</span>.
+      Free &amp; runs locally on your machine.
+    </span>
+  </div>
+
+  <!-- ══════════════════════════════════
+       MESSAGES — Chat history
+       ══════════════════════════════════ -->
+  <div id="messages">
+
+    <!-- Empty state — shown before any messages -->
+    <div id="empty-state">
+      <div class="empty-icon">✦</div>
+      <div class="empty-title">What can I help with?</div>
+      <div class="empty-sub">
+        Use OpenAI GPT with an API key, or run models locally with Ollama — free &amp; no key needed.
+      </div>
+      <div class="suggestion-chips">
+        <div class="chip" onclick="useSuggestion(this)">Explain quantum computing</div>
+        <div class="chip" onclick="useSuggestion(this)">Write a Python function</div>
+        <div class="chip" onclick="useSuggestion(this)">Summarize a topic</div>
+        <div class="chip" onclick="useSuggestion(this)">Help me brainstorm</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       INPUT AREA — Textarea + Send Button
+       ══════════════════════════════════ -->
+  <div id="input-area">
+    <div class="input-wrapper focus-openai" id="input-wrapper">
+
+      <!-- Message textarea (auto-resizes) -->
+      <textarea id="user-input" rows="1" placeholder="Send a message…"></textarea>
+
+      <div class="input-actions">
+        <!-- Model selector -->
+        <select id="model-select">
+          <option value="gpt-4o">gpt-4o</option>
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+          <option value="gpt-4-turbo">gpt-4-turbo</option>
+          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+        </select>
+
+        <!-- Send button -->
+        <button id="send-btn" disabled>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M14 8L2 2l2.5 6L2 14l12-6z" fill="white"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer row -->
+    <div class="input-footer">
+      <span class="input-hint">Enter to send · Shift+Enter for newline</span>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:11px; color:var(--text-faint); font-family:var(--font-mono);">
+          Built with
+          <a href="https://claude.ai" target="_blank"
+             style="color:var(--accent); text-decoration:none; font-weight:500;">Claude AI</a>
+        </span>
+        <button id="clear-btn">Clear chat</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<!-- ── Our Script (loaded last so DOM is ready) ── -->
+<script src="app.js"></script>
+
+</body>
+</html>
