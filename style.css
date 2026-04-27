@@ -14,6 +14,9 @@
   --accent-glow: rgba(0,201,167,0.18);
   --accent-dim: rgba(0,201,167,0.08);
   --ollama: #e8873a;
+  --claude: #d97757;
+  --claude-glow: rgba(217,119,87,0.18);
+  --claude-dim: rgba(217,119,87,0.08);
   --ollama-glow: rgba(232,135,58,0.18);
   --ollama-dim: rgba(232,135,58,0.08);
   --user-bubble: #0d1f1c;
@@ -101,6 +104,7 @@ header {
 
 .tab-btn.active-openai { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(0,201,167,0.25); }
 .tab-btn.active-ollama { background: var(--ollama-dim); color: var(--ollama); border: 1px solid rgba(232,135,58,0.25); }
+.tab-btn.active-claude { background: var(--claude-dim); color: var(--claude); border: 1px solid rgba(217,119,87,0.25); }
 .tab-btn:not(.active-openai):not(.active-ollama):hover { color: var(--text); }
 
 /* ── 6. Status Indicator ── */
@@ -133,6 +137,7 @@ header {
 
 .banner-icon.openai { background: rgba(0,201,167,0.1); border: 1px solid rgba(0,201,167,0.2); }
 .banner-icon.ollama  { background: rgba(232,135,58,0.1); border: 1px solid rgba(232,135,58,0.2); }
+.banner-icon.claude  { background: rgba(217,119,87,0.1); border: 1px solid rgba(217,119,87,0.2); }
 
 .banner-label { font-size: 11px; color: var(--text-dim); margin-bottom: 5px; font-family: var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; }
 .banner-input-row { display: flex; gap: 8px; flex: 1; }
@@ -154,6 +159,7 @@ header {
 
 .banner-btn.openai { background: var(--accent); }
 .banner-btn.ollama  { background: var(--ollama); }
+.banner-btn.claude-btn { background: var(--claude); }
 .banner-btn:hover { opacity: 0.85; }
 
 /* ── 8. Ollama Info Bar ── */
@@ -227,6 +233,7 @@ header {
 
 .provider-badge.openai { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(0,201,167,0.2); }
 .provider-badge.ollama { background: var(--ollama-dim); color: var(--ollama); border: 1px solid rgba(232,135,58,0.2); }
+.provider-badge.claude { background: var(--claude-dim); color: var(--claude); border: 1px solid rgba(217,119,87,0.2); }
 
 /* ── 13. Message Bubbles ── */
 .msg-bubble {
@@ -268,6 +275,7 @@ header {
 
 .input-wrapper.focus-openai:focus-within { border-color: rgba(0,201,167,0.4); box-shadow: 0 0 0 3px var(--accent-glow); }
 .input-wrapper.focus-ollama:focus-within { border-color: rgba(232,135,58,0.4); box-shadow: 0 0 0 3px var(--ollama-glow); }
+.input-wrapper.focus-claude:focus-within { border-color: rgba(217,119,87,0.4); box-shadow: 0 0 0 3px var(--claude-glow); }
 
 #user-input {
   flex: 1; background: transparent; border: none; outline: none;
@@ -293,7 +301,8 @@ header {
   transition: opacity 0.2s, transform 0.1s; flex-shrink: 0; background: var(--accent);
 }
 
-#send-btn.ollama-mode { background: var(--ollama); }
+#send-btn.ollama-mode  { background: var(--ollama); }
+#send-btn.claude-mode  { background: var(--claude); }
 #send-btn:hover  { opacity: 0.85; }
 #send-btn:active { transform: scale(0.93); }
 #send-btn:disabled { opacity: 0.3; cursor: not-allowed; }

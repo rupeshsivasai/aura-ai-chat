@@ -38,10 +38,11 @@
     </div>
 
     <div class="header-right">
-      <!-- Switch between OpenAI and Ollama -->
+      <!-- Switch between OpenAI, Ollama and Claude -->
       <div class="provider-tabs">
         <button class="tab-btn active-openai" id="tab-openai" onclick="switchProvider('openai')">⚡ OpenAI</button>
         <button class="tab-btn"              id="tab-ollama"  onclick="switchProvider('ollama')">🦙 Ollama</button>
+        <button class="tab-btn"              id="tab-claude"  onclick="switchProvider('claude')">🤖 Claude</button>
       </div>
 
       <!-- Status dot + text + change key button -->
@@ -107,6 +108,21 @@
   </div>
 
   <!-- ══════════════════════════════════
+       CLAUDE BANNER — Enter Anthropic API Key
+       ══════════════════════════════════ -->
+  <div class="banner hidden" id="claude-banner">
+    <div class="banner-icon claude">🤖</div>
+    <div style="flex:1;">
+      <div class="banner-label">Anthropic API Key</div>
+      <div class="banner-input-row">
+        <input type="password" class="banner-input" id="claude-key-input"
+               placeholder="sk-ant-..." autocomplete="off"/>
+        <button class="banner-btn claude-btn" id="save-claude-btn">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
        MESSAGES — Chat history
        ══════════════════════════════════ -->
   <div id="messages">
@@ -116,7 +132,7 @@
       <div class="empty-icon">✦</div>
       <div class="empty-title">What can I help with?</div>
       <div class="empty-sub">
-        Use OpenAI GPT with an API key, or run models locally with Ollama — free &amp; no key needed.
+        Use OpenAI GPT, Claude AI, or run models locally with Ollama — free &amp; no key needed.
       </div>
       <div class="suggestion-chips">
         <div class="chip" onclick="useSuggestion(this)">Explain quantum computing</div>
@@ -171,7 +187,12 @@
 
 </div><!-- /#app -->
 
-<!-- ── Our Script (loaded last so DOM is ready) ── -->
+<!-- ── Provider Scripts (loaded before app.js) ── -->
+<script src="openai.js"></script>
+<script src="ollama.js"></script>
+<script src="claude.js"></script>
+
+<!-- ── Main Orchestrator (loaded last) ── -->
 <script src="app.js"></script>
 
 </body>
