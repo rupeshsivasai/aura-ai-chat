@@ -1,22 +1,33 @@
 # AuraAI — Intelligent Chat Assistant
 
-> A sleek, dark-themed AI chat app powered by OpenAI GPT. Built with vanilla HTML, CSS & JavaScript — no frameworks, no build step. Created with [Claude AI](https://claude.ai).
+> A sleek, dark-themed AI chat app powered by OpenAI GPT, Anthropic Claude, and Ollama. Built with vanilla HTML, CSS & JavaScript — no frameworks, no build step. Created with [Claude AI](https://claude.ai).
 
-![AuraAI](https://img.shields.io/badge/Built%20with-Claude%20AI-00c9a7?style=flat-square) ![OpenAI](https://img.shields.io/badge/Powered%20by-OpenAI%20GPT-412991?style=flat-square) ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+<p align="center">
+  ![AuraAI](https://img.shields.io/badge/Built%20with-Claude%20AI-00c9a7?style=flat-square)
+  ![OpenAI](https://img.shields.io/badge/Powered%20by-OpenAI%20GPT-412991?style=flat-square)
+  ![Ollama](https://img.shields.io/badge/Powered%20by-Ollama-e8873a?style=flat-square)
+  ![Claude](https://img.shields.io/badge/Powered%20by-Claude%20AI-d97757?style=flat-square)
+  ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+</p>
 
 ---
 
 ## Features
 
-- **Multi-model support** — switch between `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, and `gpt-3.5-turbo`
+- **Multi-provider support** — switch between OpenAI, Ollama, and Claude
+- **Provider-specific models**:
+  - OpenAI: `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, `gpt-3.5-turbo`
+  - Ollama: `llama3`, `llama3.2`, `mistral`, `phi3`, `gemma2`, `codellama`, `deepseek-r1`, and custom models
+  - Claude: `claude-sonnet-4`, `claude-haiku-4`, `claude-opus-4`
 - **Markdown rendering** — AI responses render with full markdown: code blocks, tables, lists, headings, and more
+- **Syntax highlighting** — powered by `highlight.js`
 - **Conversation history** — full context sent with every message for coherent multi-turn chat
-- **Persistent API key** — your OpenAI key is saved in `localStorage` so you don't re-enter it every time
+- **Persistent storage** — API keys and configurations saved in `localStorage`
 - **Typing indicator** — animated dots while waiting for a response
 - **Suggestion chips** — quick-start prompts on the empty state
 - **Clear chat** — reset the conversation any time
 - **Error handling** — friendly messages for invalid keys, rate limits, and API failures
-- **Zero dependencies** — single HTML file, no npm, no build tools
+- **Zero dependencies** — no npm, no build tools
 
 ---
 
@@ -64,17 +75,17 @@ npx serve .
 ```
 
 **VS Code:**
-Install the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension → right-click `aura-ai-chat.html` → **Open with Live Server**
+Install the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension → right-click `index.html` → **Open with Live Server**
 
 ### 3. Open in browser
 
 ```
-http://localhost:8080/aura-ai-chat.html
+http://localhost:8080/index.html
 ```
 
-### 4. Add your OpenAI API key
+### 4. Add your API key
 
-Paste your key (starts with `sk-`) in the banner and click **Connect**. Get a key at [platform.openai.com](https://platform.openai.com/api-keys).
+Paste your OpenAI, Claude, or Ollama key in the respective banner and click **Connect**. Get an OpenAI key at [platform.openai.com](https://platform.openai.com/api-keys).
 
 ---
 
@@ -82,8 +93,14 @@ Paste your key (starts with `sk-`) in the banner and click **Connect**. Get a ke
 
 ```
 aura-ai-chat/
-├── aura-ai-chat.html   # The entire app — HTML, CSS, and JS in one file
-└── README.md           # This file
+├── index.html    # HTML structure
+├── style.css     # Visual styles
+├── app.js        # Main orchestrator (UI, state, rendering, routing)
+├── openai.js     # OpenAI provider logic
+├── ollama.js     # Ollama provider logic
+├── claude.js     # Claude provider logic
+├── README.md     # Project documentation
+├── LICENSE       # MIT License
 ```
 
 ---
@@ -92,8 +109,8 @@ aura-ai-chat/
 
 1. User types a message and hits Enter
 2. The message is added to a local conversation history array
-3. The full history is sent to the OpenAI `/v1/chat/completions` endpoint
-4. The response is rendered with [marked.js](https://marked.js.org/) for markdown support
+3. The full history is sent to the selected provider's API endpoint
+4. The response is rendered with `marked.js` for markdown support and `highlight.js` for syntax highlighting
 5. Both the user message and AI reply are stored for the next turn
 
 ---
@@ -103,8 +120,9 @@ aura-ai-chat/
 | Layer | Technology |
 |-------|-----------|
 | UI | HTML5, CSS3, Vanilla JS |
-| AI API | OpenAI Chat Completions |
+| AI API | OpenAI, Anthropic Claude, Ollama |
 | Markdown | marked.js (via CDN) |
+| Syntax Highlighting | highlight.js (via CDN) |
 | Fonts | DM Serif Display, Instrument Sans, DM Mono |
 | Built with | [Claude AI](https://claude.ai) |
 
@@ -112,12 +130,11 @@ aura-ai-chat/
 
 ## Models
 
-| Model | Best for |
-|-------|---------|
-| `gpt-4o` | Best quality, multimodal |
-| `gpt-4o-mini` | Fast & cost-effective |
-| `gpt-4-turbo` | Long context tasks |
-| `gpt-3.5-turbo` | Fastest, lowest cost |
+| Provider | Models |
+|----------|--------|
+| OpenAI | `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, `gpt-3.5-turbo` |
+| Ollama | `llama3`, `llama3.2`, `mistral`, `phi3`, `gemma2`, `codellama`, `deepseek-r1`, custom |
+| Claude | `claude-sonnet-4`, `claude-haiku-4`, `claude-opus-4` |
 
 ---
 
